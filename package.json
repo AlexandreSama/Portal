@@ -1,0 +1,28 @@
+{
+  "name": "portal",
+  "version": "1.0.0-r1",
+  "description": "An App For Every Games !",
+  "main": "src/index.js",
+  "scripts": {
+    "debug": "electron .",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build --win --publish always"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexandreSama/Portal.git"
+  },
+  "author": "Alexandre",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexandreSama/Portal/issues"
+  },
+  "homepage": "https://github.com/AlexandreSama/Portal#readme",
+  "dependencies": {
+    "electron": "^16.0.8",
+    "electron-updater": "^4.6.1",
+    "jquery": "^3.6.0",
+    "moment": "^2.29.1",
+    "request": "^2.88.2"
+  }
+}
