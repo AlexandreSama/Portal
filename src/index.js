@@ -8,7 +8,11 @@ const {
   autoUpdater
 } = require('electron-updater');
 const request = require('request');
+
+//All Called Functions
+
 const functionsPages = require('./components/functions/ChangePages')
+const Minecraft = require('./components/functions/Minecraft/Functions')
 
 let mainWindow
 
@@ -97,3 +101,14 @@ ipcMain.on('GoToFactorio', (event, data) => {
 
 // Minecraft Functions
 
+let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\'
+let launcherModsPath = app.getPath('appData') + '\\KarasiaLauncher\\mods\\'
+let launcherJavaPath = app.getPath('appData') + '\\KarasiaLauncher\\Java\\'
+
+ipcMain.on('loginMC', (event, data) => {
+  Minecraft.loginMC(data.email, data.password, event, mainWindow)
+})
+
+ipcMain.on('saveID', (event, data) => {
+  Minecraft.saveID(launcherPath, data.email)
+})

@@ -19,10 +19,16 @@
   },
   "homepage": "https://github.com/AlexandreSama/Portal#readme",
   "dependencies": {
+    "adm-zip": "^0.5.9",
     "electron": "^16.0.8",
     "electron-updater": "^4.6.1",
     "jquery": "^3.6.0",
+    "minecraft-launcher-core": "^3.16.11",
+    "minecraft-pinger": "^1.0.5",
     "moment": "^2.29.1",
+    "msmc": "^3.0.6",
+    "node-fetch": "^3.2.0",
+    "nodejs-file-downloader": "^4.9.2",
     "request": "^2.88.2"
   }
 }

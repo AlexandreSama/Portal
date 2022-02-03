@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Connexion</title>
+    <title>Connexion Minecraft</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -118,7 +118,7 @@
             let password = document.getElementById('password-field').value
 
             if (email && password) {
-                ipc.send('login', {
+                ipc.send('loginMC', {
                     email,
                     password
                 })
@@ -133,7 +133,7 @@
         })
 
         ipc.on('Error-Login', (event) => {
-            Remote.dialog.showErrorBox('Erreur !', 'Veuillez vérifier votre mot de passe ou votre email !')
+            remote.dialog.showErrorBox('Erreur !', 'Veuillez vérifier votre mot de passe ou votre email !')
         })
     </script>
     <script>
