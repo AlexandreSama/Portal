@@ -11,106 +11,17 @@ const msmc = require("msmc");
 const fetch = require('node-fetch');
 
 
-function saveID(launcherPath, email) {
-    if (fs.existsSync(launcherPath + 'infos.json')) {
+function checkLauncherPaths(launcherPath, launcherJavaPath, launcherModsPath) {
+    const arrayPath = [launcherPath, launcherModsPath, launcherJavaPath]
 
-        let rawdata = fs.readFileSync(launcherPath + 'infos.json')
-
-        let student = JSON.parse(rawdata);
-
-        if (student.infos[0].email === email) {
-            return false
+    arrayPath.forEach(element => {
+        if (!fs.existsSync(element)) {
+            fs.mkdirSync(element)
         } else {
-            student.infos.push({
-                email: data
-            })
-            let json = JSON.stringify(student)
-            fs.writeFileSync(launcherPath + 'infos.json', json)
+            console.log('Dossier déjà existant')
         }
-
-    } else {
-
-        let ID = {
-            "infos": [{
-                email: email
-            }]
-        }
-        let datsa = JSON.stringify(ID)
-        fs.writeFileSync(launcherPath + 'infos.json', datsa)
-
-    }
+    })
 }
-
-// async function checkLauncherPaths(launcherPath, launcherModsPath, launcherJavaPath, event) {
-
-//     if (fs.existsSync(launcherPath)) {
-
-//         if (fs.existsSync(launcherJavaPath)) {
-
-//             if (fs.existsSync(launcherModsPath)) {
-
-//                 return true
-
-//             } else {
-
-//                 fs.mkdirSync(launcherModsPath)
-
-//                 return true
-
-//             }
-//         } else {
-
-//             fs.mkdirSync(launcherJavaPath)
-
-//             if (fs.existsSync(launcherModsPath)) {
-
-//                 return true
-
-//             } else {
-
-//                 fs.mkdirSync(launcherModsPath)
-
-//                 return "Dossier crée avec succés"
-
-//             }
-
-//         }
-//     } else {
-
-//         fs.mkdirSync(launcherPath)
-
-//         if (fs.existsSync(launcherJavaPath)) {
-
-//             if (fs.existsSync(launcherModsPath)) {
-
-//                 return true
-
-//             } else {
-
-//                 fs.mkdirSync(launcherModsPath)
-
-//                 return "Dossier crée avec succés"
-//             }
-
-//         } else {
-
-//             fs.mkdirSync(launcherJavaPath)
-
-//             if (fs.existsSync(launcherModsPath)) {
-
-//                 return true
-
-//             } else {
-
-//                 fs.mkdirSync(launcherModsPath)
-
-//                 return "Dossier crée avec succés"
-
-//             }
-
-//         }
-//     }
-// }
 
 async function checkForge(launcherPath, event) {
 
@@ -232,66 +143,82 @@ function searchObj(obj, query) {
 
 }
 
-async function getRam(launcherPath) {
-    let ram
+async function saveRam(ram, launcherPath) {
 
-    fs.readFile(launcherPath + 'infos.json', (err, data) => {
-        if (err) {
-            ram = undefined
-        }
-        try {
-            let student = JSON.parse(data);
-            ram = searchObj(student, 'ram')
-        } catch (error) {
-            ram = undefined
-        }
-    })
+    if (fs.existsSync(launcherPath + '\\infos.json')) {
+        let rawdata = fs.readFileSync(launcherPath + 'infos.json')
 
-    return ram
+        let student = JSON.parse(rawdata);
+
+        if (student.infos[0].ram === ram) {
+            return false
+        } else {
+            student.infos[0].ram = ram
+            let json = JSON.stringify(student)
+            fs.writeFileSync(launcherPath + 'infos.json', json)
+        }
+    } else {
+        let ID = {
+            "infos": [{
+                ram: ram
+            }]
+        }
+        let datsa = JSON.stringify(ID)
+        fs.writeFileSync(launcherPath + 'infos.json', datsa)
+    }
 }
 
-async function launchGameWithMS(ram, result, javaExePath, RootPath, mainWindow, event) {
+async function launchGameWithMS(result, javaExePath, RootPath, mainWindow, event) {
 
+    console.log('test1')
     fs.unlinkSync(RootPath + 'modsList.json')
     let opts
 
-    if (ram === undefined) {
-        opts = {
-            clientPackage: null,
-            authorization: msmc.getMCLC().getAuth(result),
-            root: RootPath,
-            forge: RootPath + "forge.jar",
-            javaPath: path.join(javaExePath + 'bin\\java.exe'),
-            version: {
-                number: "1.12.2",
-                type: "release"
-            },
-            memory: {
-                max: "6G",
-                min: "4G"
+    console.log('test2')
+    fs.readFile(RootPath + 'infos.json', (err, data) => {
+        if (err) {
+            console.log(err)
+            opts = {
+                clientPackage: null,
+                authorization: msmc.getMCLC().getAuth(result),
+                root: RootPath,
+                forge: RootPath + "forge.jar",
+                javaPath: path.join(javaExePath + 'bin\\java.exe'),
+                version: {
+                    number: "1.12.2",
+                    type: "release"
+                },
+                memory: {
+                    max: "6G",
+                    min: "4G"
+                }
             }
+            launcher.launch(opts);
         }
-    } else {
-        opts = {
-            clientPackage: null,
-            authorization: msmc.getMCLC().getAuth(result),
-            root: RootPath,
-            forge: RootPath + "forge.jar",
-            javaPath: path.join(javaExePath + 'bin\\java.exe'),
-            version: {
-                number: "1.12.2",
-                type: "release"
-            },
-            memory: {
-                max: ram,
-                min: "4G"
-            }
-        }
-    }
 
-    launcher.launch(opts);
+        let student = JSON.parse(data);
+        console.log(student.infos[0].ram)
+
+        opts = {
+            clientPackage: null,
+            authorization: msmc.getMCLC().getAuth(result),
+            root: RootPath,
+            forge: RootPath + "forge.jar",
+            javaPath: path.join(javaExePath + 'bin\\java.exe'),
+            version: {
+                number: "1.12.2",
+                type: "release"
+            },
+            memory: {
+                max: student.infos[0].ram,
+                min: "4G"
+            }
+        }
+        launcher.launch(opts);
+    })
 
     launcher.on('progress', (e) => {
+        console.log(e)
         let type = e.type
         let task = e.task
         let total = e.total
@@ -303,6 +230,7 @@ async function launchGameWithMS(ram, result, javaExePath, RootPath, mainWindow, 
         console.log(e)
     })
     launcher.on('debug', (e) => {
+        console.log(e)
         mainWindow.webContents.send('dataMc', {
             e
         })
@@ -313,9 +241,12 @@ async function launchGameWithMS(ram, result, javaExePath, RootPath, mainWindow, 
         })
         console.log(e)
     })
+
 }
 
 module.exports = {
+    saveRam,
+    checkLauncherPaths,
     checkForge,
     checkJava,
     checkMods,
@@ -324,7 +255,5 @@ module.exports = {
     downloadMissedMods,
     downloadModsList,
     launchGameWithMS,
-    getRam,
     searchObj,
-    saveID
 }

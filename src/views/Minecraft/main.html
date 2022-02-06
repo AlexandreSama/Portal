@@ -63,135 +63,157 @@
     </nav>
 
     <!-- Page Content  -->
-    <div id="content" class="p-4 p-md-5 pt-5" style="background-image: url(../../components/assets/images/minecraft/WallpaperBackgroundMain.jpg);">
+    <div id="content" class="p-4 p-md-5 pt-5"
+      style="background-image: url(../../components/assets/images/minecraft/WallpaperBackgroundMain.jpg);">
       <h2 class="mb-4">Portal</h2>
       <div class="container-fluid">
-        <div class="card"
-          style="width: 18rem; margin-top: 100px; background-color: transparent; color: white; border: 0px;"
-          id="CardServerStatus">
-          <div class="card-body">
-            <p id="serverStat"></p>
-            <p id="pingServer"></p>
-            <p id="playerStat"></p>
+        <div class="row">
+          <div class="col-4">
+            <div class="card"
+              style="width: 18rem; margin-top: 100px; background-color: transparent; color: white; border: 0px;"
+              id="CardServerStatus">
+              <div class="card-body">
+                <p id="serverStat"></p>
+                <p id="pingServer"></p>
+                <p id="playerStat"></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-4"></div>
+          <div class="col-4">
+            <select class="form-select" aria-label="Ram a choisir" id="ramSelect">
+              <option selected>Ram séléctionné :</option>
+              <option value="4G">4G</option>
+              <option value="5G">5G</option>
+              <option value="6G">6G</option>
+              <option value="7G">7G</option>
+              <option value="8G">8G</option>
+            </select>
+            <button type="button" class="btn btn-success" id="saveRam">Sauvegarder</button>
           </div>
         </div>
+        <div class="progress-container">
+          <div class="progress"></div>
+        </div>
+        <p id="downloadProgress" style="bottom: 130px; right: 728px; color: white; font-size: large;">test
+        </p>
+        <button class="btn btn-outline-success" style="position: absolute; bottom: 100px; right: 200px;"
+          id="playButton">Jouer !</button>
       </div>
-      <p id="downloadProgress" style="position: absolute; bottom: 130px; right: 728px; color: white; font-size: large;">
-      </p>
-      <div class="progress-container">
-        <div class="progress"></div>
-      </div>
-      <button class="btn btn-outline-success" style="position: absolute; bottom: 100px; right: 200px;"
-        id="playButton">Jouer !</button>
+
+      <div id="notification" class="hidden">
+        <p id="message"></p>
+        <button id="close-button" onclick="closeNotification()" class="btn btn-danger">Fermer</button>
+        <button id="restart-button" onclick="restartApp()" class="hidden btn-success"> Restart</button>
+      </div> -->
     </div>
 
-    <div id="notification" class="hidden">
-      <p id="message"></p>
-      <button id="close-button" onclick="closeNotification()" class="btn btn-danger">Fermer</button>
-      <button id="restart-button" onclick="restartApp()" class="hidden btn-success"> Restart</button>
-    </div> -->
-  </div>
+    <script>
+      window.$ = window.jQuery = require('jquery');
+    </script>
+    <script src="../../components/assets/js/minecraft/popper.js"></script>
+    <script src="../../components/assets/js/minecraft/bootstrap.min.js"></script>
+    <script src="../../components/assets/js/minecraft/main.js"></script>
 
-  <script>
-    window.$ = window.jQuery = require('jquery');
-  </script>
-  <script src="../../components/assets/js/minecraft/popper.js"></script>
-  <script src="../../components/assets/js/minecraft/bootstrap.min.js"></script>
-  <script src="../../components/assets/js/minecraft/main.js"></script>
+    <script>
+      const electron = require('electron')
+      const ipc = electron.ipcRenderer
+      const pinger = require('minecraft-pinger')
 
-  <script>
-    const electron = require('electron')
-    const ipc = electron.ipcRenderer
-    const pinger = require('minecraft-pinger')
-
-    const notification = document.getElementById('notification')
-    const message = document.getElementById('message')
-    const restartButton = document.getElementById('restart-button')
-    const progressbar = document.querySelector(".progress");
+      const notification = document.getElementById('notification')
+      const message = document.getElementById('message')
+      const restartButton = document.getElementById('restart-button')
+      const progressbar = document.querySelector(".progress");
 
 
-    const changeProgress = (progress) => {
-      progressbar.style.width = `${progress}%`;
-    };
+      const changeProgress = (progress) => {
+        progressbar.style.width = `${progress}%`;
+      };
 
 
-    ipc.on('update_available', () => {
-      ipc.removeAllListeners('update_available')
-      message.innerText = 'Une mise a jour du launcher est disponible, je la télécharge pour vous...'
-      notification.classList.remove('hidden')
-    })
+      ipc.on('update_available', () => {
+        ipc.removeAllListeners('update_available')
+        message.innerText = 'Une mise a jour du launcher est disponible, je la télécharge pour vous...'
+        notification.classList.remove('hidden')
+      })
 
-    ipc.on('update_downloaded', () => {
-      ipc.removeAllListeners('update_downloaded')
-      message.innerText =
-        'Mise a jour téléchargé avec succés, elle sera installé après un redémarrage. Redémarrer maintenant ?'
-      restartButton.classList.remove('hidden')
-      notification.classList.remove('hidden')
-    })
+      ipc.on('update_downloaded', () => {
+        ipc.removeAllListeners('update_downloaded')
+        message.innerText =
+          'Mise a jour téléchargé avec succés, elle sera installé après un redémarrage. Redémarrer maintenant ?'
+        restartButton.classList.remove('hidden')
+        notification.classList.remove('hidden')
+      })
 
-    function closeNotification() {
-      notification.classList.add('hidden')
-    }
-
-    function restartApp() {
-      ipc.send('restart_app')
-    }
-
-    let emailMS
-    let passwordMS
-    let uuidMS
-
-    //Get data from MS User
-    ipc.on('MSData', (event, data) => {
-      console.log(data)
-      uuidMS = data.id
-    })
-
-    //Get Server Stats
-    pinger.ping('193.168.146.71', 25565, (error, result) => {
-      if (error) return console.error(error)
-      if (result) {
-        document.getElementById('serverStat').innerHTML += "Etat du serveur : Allumé !"
-        document.getElementById('pingServer').innerHTML += `Ping du serveur : ${result['ping']}`
-        document.getElementById('playerStat').innerHTML += `Nombre de joueurs : ${result['players']['online']}`
+      function closeNotification() {
+        notification.classList.add('hidden')
       }
-    })
 
-    //Send event for launching Minecraft
-    document.getElementById('playButton').addEventListener('click', () => {
-      ipc.send('Play')
-    })
-
-    document.getElementById('Accueil').addEventListener('click', () => {
-      ipc.send('GoToMain')
-    })
-
-    //Send Event for changing Pages
-
-    // Get Launch Event
-    ipc.on('dataDownload', (event, data) => {
-      document.getElementById('downloadProgress').innerHTML =
-        `Téléchargement des ${data.type} : ${data.task} / ${data.total}`
-      console.log(data.type)
-
-      if (data.type === "assets") {
-        let percent = (data.task / data.total) * 100
-        changeProgress(percent)
-      } else if (data.type === "natives") {
-        let percent = (data.task / data.total) * 100
-        changeProgress(percent)
-      } else if (data.type === "classes-maven-custom") {
-        let percent = (data.task / data.total) * 100
-        changeProgress(percent)
-      } else if (data.type === "classes-custom") {
-        let percent = (data.task / data.total) * 100
-        changeProgress(percent)
-      } else if (data.type === "classes") {
-        let percent = (data.task / data.total) * 100
-        changeProgress(percent)
+      function restartApp() {
+        ipc.send('restart_app')
       }
-    })
-  </script>
+
+      let emailMS
+      let passwordMS
+      let uuidMS
+
+      //Get data from MS User
+      ipc.on('MSData', (event, data) => {
+        console.log(data)
+        uuidMS = data.id
+      })
+
+      //Get Server Stats
+      pinger.ping('193.168.146.71', 25565, (error, result) => {
+        if (error) return console.error(error)
+        if (result) {
+          document.getElementById('serverStat').innerHTML += "Etat du serveur : Allumé !"
+          document.getElementById('pingServer').innerHTML += `Ping du serveur : ${result['ping']}`
+          document.getElementById('playerStat').innerHTML += `Nombre de joueurs : ${result['players']['online']}`
+        }
+      })
+
+      //Send event for launching Minecraft
+      document.getElementById('playButton').addEventListener('click', () => {
+        ipc.send('Play')
+      })
+
+      document.getElementById('Accueil').addEventListener('click', () => {
+        ipc.send('GoToMain')
+      })
+
+      document.getElementById('saveRam').addEventListener('click', () => {
+        let e = document.getElementById('ramSelect')
+        let ram = e.value
+        ipc.send('SaveRam', (ram))
+      })
+
+      //Send Event for changing Pages
+
+      // Get Launch Event
+      ipc.on('dataDownload', (event, data) => {
+        document.getElementById('downloadProgress').innerHTML =
+          `Téléchargement des ${data.type} : ${data.task} / ${data.total}`
+        console.log(data.type)
+
+        if (data.type === "assets") {
+          let percent = (data.task / data.total) * 100
+          changeProgress(percent)
+        } else if (data.type === "natives") {
+          let percent = (data.task / data.total) * 100
+          changeProgress(percent)
+        } else if (data.type === "classes-maven-custom") {
+          let percent = (data.task / data.total) * 100
+          changeProgress(percent)
+        } else if (data.type === "classes-custom") {
+          let percent = (data.task / data.total) * 100
+          changeProgress(percent)
+        } else if (data.type === "classes") {
+          let percent = (data.task / data.total) * 100
+          changeProgress(percent)
+        }
+      })
+    </script>
 </body>
 
 </html>

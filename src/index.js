@@ -131,13 +131,17 @@ ipcMain.on('loginMS', (event, data) => {
   Minecraft.downloadModsList(launcherPath)
 })
 
-ipcMain.on('Play', (event, data) => {
-  let ram = Minecraft.getRam(launcherPath)
-  Minecraft.checkForge(launcherPath, event)
-  Minecraft.checkJava(launcherJavaPath, event)
-  Minecraft.checkMods(launcherPath, launcherModsPath, event)
-  Minecraft.launchGameWithMS(ram, MSResult, launcherJavaPath, launcherPath, mainWindow, event)
+ipcMain.on('Play', async (event, data) => {
+  Minecraft.checkLauncherPaths(launcherPath, launcherJavaPath, launcherModsPath)
+  await Minecraft.checkForge(launcherPath, event)
+  await Minecraft.checkJava(launcherJavaPath, event)
+  await Minecraft.checkMods(launcherPath, launcherModsPath, event)
+  await Minecraft.launchGameWithMS(MSResult, launcherJavaPath, launcherPath, mainWindow, event)
 })
 ipcMain.on('saveID', (event, data) => {
   Minecraft.saveID(launcherPath, data.email)
+})
+
+ipcMain.on('SaveRam', (event, data) => {
+  Minecraft.saveRam(data, launcherPath)
 })
