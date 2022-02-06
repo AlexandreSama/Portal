@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panels</title>
+    <link rel="stylesheet" href="../../components/assets/utilities/bootstrap.min.css">
+</head>
+<body>
+    <div class="card-group">
+        <div class="card">
+          <img src="../../components/assets/images/vpsmonitor/test.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">VPS Alex</h5>
+            <p class="card-text" id="RAMAlex"></p>
+            <p class="card-text" id="CPUAlex"></p>
+            <button type="button" id="VPSAlex" class="btn btn-success">Allons-y !</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="../../components/assets/images/vpsmonitor/test.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">VPS Cyril</h5>
+            <p class="card-text" id="RAMCyril"></p>
+            <p class="card-text" id="CPUCyril"></p>
+            <button type="button" id="VPSCyril" class="btn btn-success">Allons-y !</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="../../components/assets/images/vpsmonitor/test.jpg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">VPS Patou</h5>
+            <p class="card-text" id="RAMPatou"></p>
+            <p class="card-text" id="CPUPatou"></p>
+            <button type="button" id="VPSPatou" class="btn btn-success">Allons-y !</button>
+          </div>
+        </div>
+      </div>
+</body>
+
+<script>
+    const ipc = require('electron').ipcRenderer;
+	const fs = require('fs')
+    const prompt = require('electron-prompt');
+
+    document.getElementById('VPSPatou').addEventListener('click', () => {
+        let A2FCode;
+        prompt({
+            title: 'Code d\'authentification',
+            label: 'Entrer votre code d\'authentification !',
+            value: 'votrecode',
+            type: 'input'
+        }).then((r) => {
+            if(r == null || r == ""){
+                A2FCode = undefined
+            }else{
+                A2FCode = r
+            }
+            ipc.send('VPSPatou', {A2FCode})
+        })
+    })
+
+    document.getElementById('VPSAlex').addEventListener('click', () => {
+        let A2FCode;
+        prompt({
+            title: 'Code d\'authentification',
+            label: 'Entrer votre code d\'authentification !',
+            value: 'votrecode',
+            type: 'input'
+        }).then((r) => {
+            if(r == null || r == ""){
+                A2FCode = undefined
+            }else{
+                A2FCode = r
+            }
+            ipc.send('VPSAlex', {A2FCode})
+        })
+    })
+
+    document.getElementById('VPSCyril').addEventListener('click', () => {
+        let A2FCode;
+        prompt({
+            title: 'Code d\'authentification',
+            label: 'Entrer votre code d\'authentification !',
+            value: 'votrecode',
+            type: 'input'
+        }).then((r) => {
+            if(r == null || r == ""){
+                A2FCode = undefined
+            }else{
+                A2FCode = r
+            }
+            ipc.send('VPSCyril', {A2FCode})
+        })
+    })
+</script>
+</html>
