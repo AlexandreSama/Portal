@@ -6,13 +6,10 @@ let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\'
 
 function GoToMinecraftLogin(mainWindow) {
     mainWindow.loadURL(`file://${__dirname}/../../views/Minecraft/login.html`)
+
     if (fs.existsSync(launcherPath)) {
-        if (fs.existsSync(launcherPath + '\\infos.json')) {
-            let rawdata = fs.readFileSync(launcherPath + '\\infos.json');
-            let student = JSON.parse(rawdata);
-            mainWindow.webContents.send('savedID', {student})
-        }
-    }else{
+        
+    } else {
         fs.mkdirSync(launcherPath)
     }
 }
@@ -25,8 +22,13 @@ function GoToFactorio(mainWindow) {
     mainWindow.loadURL(`file://${__dirname}/../../views/Factorio/main.html`)
 }
 
+function GoToMain(mainWindow) {
+    mainWindow.loadURL(`file://${__dirname}/../../views/main.html`)
+}
+
 module.exports = {
     GoToMinecraftLogin,
     GoToFactorio,
-    GoToSatisfactory
+    GoToSatisfactory,
+    GoToMain
 }

@@ -8,24 +8,8 @@ const Downloader = require("nodejs-file-downloader");
 const launcher = new Client();
 const path = require('path');
 const msmc = require("msmc");
+const fetch = require('node-fetch');
 
-function loginMC(email, password, event, mainWindow) {
-    Authenticator.getAuth(email, password).then(e => {
-        let datas = {
-            "username": e.name,
-            "uuid": e.uuid,
-            "email": email,
-            "password": password
-        }
-        mainWindow.loadURL(`file://${__dirname}/../../../views/Minecraft/main.html`)
-        mainWindow.webContents.once('dom-ready', () => {
-            mainWindow.webContents.send('usernameData', datas)
-        })
-    }).catch(err => {
-        console.log(err)
-        event.sender.send('Error-Login')
-    })
-}
 
 function saveID(launcherPath, email) {
     if (fs.existsSync(launcherPath + 'infos.json')) {
@@ -57,76 +41,76 @@ function saveID(launcherPath, email) {
     }
 }
 
-async function checkLauncherPaths(launcherPath, launcherModsPath, launcherJavaPath, event) {
+// async function checkLauncherPaths(launcherPath, launcherModsPath, launcherJavaPath, event) {
 
-    if (fs.existsSync(launcherPath)) {
+//     if (fs.existsSync(launcherPath)) {
 
-        if (fs.existsSync(launcherJavaPath)) {
+//         if (fs.existsSync(launcherJavaPath)) {
 
-            if (fs.existsSync(launcherModsPath)) {
+//             if (fs.existsSync(launcherModsPath)) {
 
-                return true
+//                 return true
 
-            } else {
+//             } else {
 
-                fs.mkdirSync(launcherModsPath)
+//                 fs.mkdirSync(launcherModsPath)
 
-                return "Dossier crée avec succés"
+//                 return true
 
-            }
-        } else {
+//             }
+//         } else {
 
-            fs.mkdirSync(launcherJavaPath)
+//             fs.mkdirSync(launcherJavaPath)
 
-            if (fs.existsSync(launcherModsPath)) {
+//             if (fs.existsSync(launcherModsPath)) {
 
-                return true
+//                 return true
 
-            } else {
+//             } else {
 
-                fs.mkdirSync(launcherModsPath)
+//                 fs.mkdirSync(launcherModsPath)
 
-                return "Dossier crée avec succés"
+//                 return "Dossier crée avec succés"
 
-            }
+//             }
 
-        }
-    } else {
+//         }
+//     } else {
 
-        fs.mkdirSync(launcherPath)
+//         fs.mkdirSync(launcherPath)
 
-        if (fs.existsSync(launcherJavaPath)) {
+//         if (fs.existsSync(launcherJavaPath)) {
 
-            if (fs.existsSync(launcherModsPath)) {
+//             if (fs.existsSync(launcherModsPath)) {
 
-                return true
+//                 return true
 
-            } else {
+//             } else {
 
-                fs.mkdirSync(launcherModsPath)
+//                 fs.mkdirSync(launcherModsPath)
 
-                return "Dossier crée avec succés"
-            }
+//                 return "Dossier crée avec succés"
+//             }
 
-        } else {
+//         } else {
 
-            fs.mkdirSync(launcherJavaPath)
+//             fs.mkdirSync(launcherJavaPath)
 
-            if (fs.existsSync(launcherModsPath)) {
+//             if (fs.existsSync(launcherModsPath)) {
 
-                return true
+//                 return true
 
-            } else {
+//             } else {
 
-                fs.mkdirSync(launcherModsPath)
+//                 fs.mkdirSync(launcherModsPath)
 
-                return "Dossier crée avec succés"
+//                 return "Dossier crée avec succés"
 
-            }
+//             }
 
-        }
-    }
-}
+//         }
+//     }
+// }
 
 async function checkForge(launcherPath, event) {
 
@@ -331,64 +315,15 @@ async function launchGameWithMS(ram, result, javaExePath, RootPath, mainWindow, 
     })
 }
 
-async function launchGameWithMojang(ram, email, password, javaExePath, RootPath, mainWindow, event) {
-
-    fs.unlinkSync(RootPath + 'modsList.json')
-
-    let opts = {
-        clientPackage: null,
-        authorization: Authenticator.getAuth(email, password),
-        root: RootPath,
-        forge: RootPath + "forge.jar",
-        javaPath: path.join(javaExePath + 'bin\\java.exe'),
-        version: {
-            number: "1.12.2",
-            type: "release"
-        },
-        memory: {
-            max: ram,
-            min: "4G"
-        }
-    }
-
-    launcher.launch(opts);
-
-    launcher.on('progress', (e) => {
-        let type = e.type
-        let task = e.task
-        let total = e.total
-        event.sender.send('dataDownload', ({
-            type,
-            task,
-            total
-        }))
-        console.log(e)
-    })
-    launcher.on('debug', (e) => {
-        mainWindow.webContents.send('dataMc', {
-            e
-        })
-    })
-    launcher.on('data', (e) => {
-        mainWindow.webContents.send('dataMcd', {
-            e
-        })
-        console.log(e)
-    })
-}
-
 module.exports = {
-    loginMC,
     checkForge,
     checkJava,
-    checkLauncherPaths,
     checkMods,
     downloadForge,
     downloadJava,
     downloadMissedMods,
     downloadModsList,
     launchGameWithMS,
-    launchGameWithMojang,
     getRam,
     searchObj,
     saveID

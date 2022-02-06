@@ -8,7 +8,7 @@
 
   <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://kit.fontawesome.com/e1f9f1b9af.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../../components/assets/css/minecraft/main.css">
   <style>
     #notification {
@@ -63,7 +63,7 @@
     </nav>
 
     <!-- Page Content  -->
-    <div id="content" class="p-4 p-md-5 pt-5">
+    <div id="content" class="p-4 p-md-5 pt-5" style="background-image: url(../../components/assets/images/minecraft/WallpaperBackgroundMain.jpg);">
       <h2 class="mb-4">Portal</h2>
       <div class="container-fluid">
         <div class="card"
@@ -103,7 +103,6 @@
     const electron = require('electron')
     const ipc = electron.ipcRenderer
     const pinger = require('minecraft-pinger')
-    const util = require('minecraft-server-util');
 
     const notification = document.getElementById('notification')
     const message = document.getElementById('message')
@@ -138,36 +137,14 @@
       ipc.send('restart_app')
     }
 
-    let email
-    let password
-    let username
-    let uuid
-
-    ipc.on('dataMc', (event, data) => {
-      console.log(data)
-    })
-    ipc.on('dataMcd', (event, data) => {
-      console.log(data)
-    })
+    let emailMS
+    let passwordMS
+    let uuidMS
 
     //Get data from MS User
     ipc.on('MSData', (event, data) => {
       console.log(data)
-      document.getElementById('usernamePlayer').innerHTML += data.name
-      document.getElementById('PlayerSkin').style.backgroundImage = `url('https://crafatar.com/avatars/${data.id}')`
-      username = data.name
-      uuid = data.id
-    })
-
-    //Get data from Mojang User
-    ipc.on('usernameData', (event, datas) => {
-      document.getElementById('usernamePlayer').innerHTML += datas.username
-      document.getElementById('PlayerSkin').style.backgroundImage =
-        `url('https://crafatar.com/avatars/${datas.uuid}')`
-      email = datas.email
-      password = datas.password
-      username = datas.username
-      uuid = datas.uuid
+      uuidMS = data.id
     })
 
     //Get Server Stats
@@ -182,27 +159,14 @@
 
     //Send event for launching Minecraft
     document.getElementById('playButton').addEventListener('click', () => {
-      let userEmail = email
-      let userPaswword = password
-      ipc.send('Play', (event, {
-        userEmail,
-        userPaswword
-      }))
+      ipc.send('Play')
+    })
+
+    document.getElementById('Accueil').addEventListener('click', () => {
+      ipc.send('GoToMain')
     })
 
     //Send Event for changing Pages
-    document.getElementById('settingsButton').addEventListener('click', () => {
-      let userName = username
-      let userUUID = uuid
-      let userEmail = email
-      let userPaswword = password
-      ipc.send('GoToSettings', (event, {
-        userName,
-        userUUID,
-        userEmail,
-        userPaswword
-      }))
-    })
 
     // Get Launch Event
     ipc.on('dataDownload', (event, data) => {

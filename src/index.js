@@ -8,11 +8,14 @@ const {
   autoUpdater
 } = require('electron-updater');
 const request = require('request');
+const msmc = require("msmc");
+const fetch = require('node-fetch');
 
 //All Called Functions
 
 const functionsPages = require('./components/functions/ChangePages')
 const Minecraft = require('./components/functions/Minecraft/Functions')
+let MSResult
 
 let mainWindow
 
@@ -99,16 +102,42 @@ ipcMain.on('GoToFactorio', (event, data) => {
   functionsPages.GoToFactorio(mainWindow)
 })
 
+ipcMain.on('GoToMain', (event, data) => {
+  functionsPages.GoToMain(mainWindow)
+})
+
 // Minecraft Functions
 
 let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\'
 let launcherModsPath = app.getPath('appData') + '\\KarasiaLauncher\\mods\\'
 let launcherJavaPath = app.getPath('appData') + '\\KarasiaLauncher\\Java\\'
 
-ipcMain.on('loginMC', (event, data) => {
-  Minecraft.loginMC(data.email, data.password, event, mainWindow)
+ipcMain.on('loginMS', (event, data) => {
+  msmc.setFetch(fetch)
+  msmc.fastLaunch("raw", (update) => {
+
+  }).then(result => {
+    if (msmc.errorCheck(result)) {
+      console.log(result.reason)
+      return;
+    }
+    result.profile
+    MSResult = result
+    mainWindow.loadURL(`file://${__dirname}/../src/views/Minecraft/main.html`)
+    mainWindow.webContents.once('dom-ready', () => {
+      mainWindow.webContents.send('MSData', result.profile)
+    })
+  })
+  Minecraft.downloadModsList(launcherPath)
 })
 
+ipcMain.on('Play', (event, data) => {
+  let ram = Minecraft.getRam(launcherPath)
+  Minecraft.checkForge(launcherPath, event)
+  Minecraft.checkJava(launcherJavaPath, event)
+  Minecraft.checkMods(launcherPath, launcherModsPath, event)
+  Minecraft.launchGameWithMS(ram, MSResult, launcherJavaPath, launcherPath, mainWindow, event)
+})
 ipcMain.on('saveID', (event, data) => {
   Minecraft.saveID(launcherPath, data.email)
 })
