@@ -1,7 +1,7 @@
 {
   "name": "portal",
   "version": "1.0.0-r1",
-  "description": "An App For Every Games !",
+  "description": "An App For Our Games !",
   "main": "src/index.js",
   "scripts": {
     "debug": "electron .",
@@ -20,7 +20,6 @@
   "homepage": "https://github.com/AlexandreSama/Portal#readme",
   "dependencies": {
     "adm-zip": "^0.5.9",
-    "electron": "^16.0.8",
     "electron-updater": "^4.6.1",
     "jquery": "^3.6.0",
     "minecraft-launcher-core": "^3.16.11",
@@ -31,5 +30,9 @@
     "node-fetch": "2.6.1",
     "nodejs-file-downloader": "^4.9.2",
     "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "electron-builder": "^22.14.13",
+    "electron": "^16.0.8"
   }
 }
