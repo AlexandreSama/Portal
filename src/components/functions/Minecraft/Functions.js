@@ -145,7 +145,7 @@ function searchObj(obj, query) {
 
 async function saveRam(ram, launcherPath) {
 
-    if (fs.existsSync(launcherPath + '\\infos.json')) {
+    if (fs.existsSync(launcherPath + 'infos.json')) {
         let rawdata = fs.readFileSync(launcherPath + 'infos.json')
 
         let student = JSON.parse(rawdata);

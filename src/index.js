@@ -10,11 +10,17 @@ const {
 const request = require('request');
 const msmc = require("msmc");
 const fetch = require('node-fetch');
+const mysql = require('mysql2')
+const { Client } = require('ssh2');
+const prompt = require('electron-prompt');
+const ConfigVps = require('./config.json')
+const remoteMain = require("@electron/remote/main");
 
 //All Called Functions
 
 const functionsPages = require('./components/functions/ChangePages')
 const Minecraft = require('./components/functions/Minecraft/Functions')
+const VpsMonitor = require('./components/functions/VpsMonitor/Functions')
 let MSResult
 
 let mainWindow
@@ -27,11 +33,14 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      enableRemoteModule: true,
     },
     //icon: `file://${__dirname}/icon.ico`
   }); // on définit une taille pour notre fenêtre
 
   mainWindow.loadURL(`file://${__dirname}/views/main.html`); // on doit charger un chemin absolu
+  remoteMain.initialize()
+  remoteMain.enable(mainWindow.webContents) 
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -70,6 +79,9 @@ app.on('activate', () => {
   }
 });
 
+
+// Updates Parts
+
 ipcMain.on('app_version', (event) => {
   event.sender.send('app_version', {
     version: app.getVersion()
@@ -88,7 +100,7 @@ ipcMain.on('restart_app', () => {
   autoUpdater.quitAndInstall()
 })
 
-//Functions Change Pages
+//Pages Parts
 
 ipcMain.on('GoToMinecraft', (event, data) => {
   functionsPages.GoToMinecraftLogin(mainWindow)
@@ -98,19 +110,19 @@ ipcMain.on('GoToSatisfactory', (event, data) => {
   functionsPages.GoToSatisfactory(mainWindow)
 })
 
-ipcMain.on('GoToFactorio', (event, data) => {
-  functionsPages.GoToFactorio(mainWindow)
+ipcMain.on('GoToVpsMonitor', (event, data) => {
+  functionsPages.GoToVpsMonitoring(mainWindow)
 })
 
 ipcMain.on('GoToMain', (event, data) => {
   functionsPages.GoToMain(mainWindow)
 })
 
-// Minecraft Functions
+// Minecraft Parts
 
-let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\'
-let launcherModsPath = app.getPath('appData') + '\\KarasiaLauncher\\mods\\'
-let launcherJavaPath = app.getPath('appData') + '\\KarasiaLauncher\\Java\\'
+let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\'
+let launcherModsPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\mods\\'
+let launcherJavaPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\Java\\'
 
 ipcMain.on('loginMS', (event, data) => {
   msmc.setFetch(fetch)
@@ -144,4 +156,41 @@ ipcMain.on('saveID', (event, data) => {
 
 ipcMain.on('SaveRam', (event, data) => {
   Minecraft.saveRam(data, launcherPath)
+})
+
+//VpsMonitor Parts
+
+ipcMain.on('loginVps', (event, data) => {
+  VpsMonitor.CheckUserDatabase(data, mainWindow, event, ConfigVps.host, ConfigVps.username, ConfigVps.password)
+})
+
+ipcMain.on('VPSPatou', (event, data) => {
+
+  mainWindow.loadURL(`file://${__dirname}/../views/vpsmonitor/panel.html`)
+  mainWindow.webContents.once('dom-ready', () => {
+    event.sender.send('startSSHPatou', data.A2FCode)
+  })
+})
+
+
+ipcMain.on('VPSAlex', (event, data) => {
+  mainWindow.loadURL(`file://${__dirname}/views/vpsmonitor/panel.html`)
+  let arrayInfos = {
+    a2fcode : data.A2FCode,
+    password : ConfigVps.passwordVpsAlex,
+    config: {
+      host: ConfigVps.hostVpsAlex,
+      port: ConfigVps.portVpsAlex,
+    }
+  }
+  mainWindow.webContents.once('dom-ready', () => {
+    event.sender.send('startSSHAlex', arrayInfos)
+  })
+})
+
+ipcMain.on('VPSCyril', (event, data) => {
+  mainWindow.loadURL(`file://${__dirname}/../views/vpsmonitor/panel.html`)
+  mainWindow.webContents.once('dom-ready', () => {
+    event.sender.send('startSSHCyril', data.A2FCode)
+  })
 })

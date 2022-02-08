@@ -31,7 +31,7 @@
                     <a href="#" id="Minecraft"><span class="fas fa-cubes mr-3"></span> Minecraft</a>
                 </li>
                 <li>
-                    <a href="#" id="Satisfactory"><span class="fas fa-wrench mr-3"></span> Satisfactory</a>
+                    <a href="#" id="VpsMonitor"><span class="fas fa-wrench mr-3"></span> VpsMonitor</a>
                 </li>
                 <li>
                     <a href="#" id="Factorio"><span class="fas fa-lightbulb mr-3"></span> Factorio</a>
@@ -122,8 +122,8 @@
         document.getElementById('Minecraft').addEventListener('click',() => {
             ipc.send('GoToMinecraft')
         })
-        document.getElementById('Satisfactory').addEventListener('click',() => {
-            ipc.send('GoToSatisfactory')
+        document.getElementById('VpsMonitor').addEventListener('click',() => {
+            ipc.send('GoToVpsMonitor')
         })
         document.getElementById('Factorio').addEventListener('click',() => {
             ipc.send('GoToFactorio')

@@ -107,7 +107,7 @@
 			let password = document.getElementById('password-field').value
 
 			if (username && password) {
-				ipc.send('login', {
+				ipc.send('loginVps', {
 					username,
 					password
 				})
