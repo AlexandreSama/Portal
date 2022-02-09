@@ -213,6 +213,14 @@
           changeProgress(percent)
         }
       })
+
+      let i = 0
+      ipc.on('MissedModsDownload', (event, data) => {
+        i++
+        document.getElementById('downloadProgress').innerHTML = `Téléchargement de ${i} mods sur ${data.numberMods}`
+        let percent = (i / data.numberMods) * 100
+        changeProgress(percent)
+      })
     </script>
 </body>
 

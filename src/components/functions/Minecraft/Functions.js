@@ -11,7 +11,7 @@ const msmc = require("msmc");
 const fetch = require('node-fetch');
 
 
-function checkLauncherPaths(launcherPath, launcherJavaPath, launcherModsPath) {
+async function checkLauncherPaths(launcherPath, launcherJavaPath, launcherModsPath) {
     const arrayPath = [launcherPath, launcherModsPath, launcherJavaPath]
 
     arrayPath.forEach(element => {
@@ -38,10 +38,7 @@ async function checkForge(launcherPath, event) {
 async function checkJava(launcherJavaPath, event) {
     const files = fs.readdirSync(launcherJavaPath)
     if (files.length == 0) {
-        const result = await downloadJava(launcherJavaPath, event)
-        if (result) {
-            return true
-        }
+        await downloadJava(launcherJavaPath, event)
     }
 }
 
@@ -49,6 +46,8 @@ async function checkMods(launcherPath, launcherModsPath, event) {
 
     let jsonMods = []
     let folderMods = []
+    let i = 0
+    let state = false
 
     fs.readdirSync(launcherModsPath).forEach(file => {
         folderMods.push(file)
@@ -64,7 +63,28 @@ async function checkMods(launcherPath, launcherModsPath, event) {
     let difference = jsonMods.filter(x => !folderMods.includes(x));
 
     if (difference.length >= 1) {
-        downloadMissedMods(difference, launcherModsPath, event)
+
+        let numberMods = difference.length
+        for await(const element of difference) {
+            const downloadMissedMods = new Downloader({
+                url: "http://193.168.146.71/mods/" + element,
+                directory: launcherModsPath,
+                maxAttempts: 3
+            })
+
+            await downloadMissedMods.download()
+            i++
+            event.sender.send('MissedModsDownload', {
+                numberMods
+            })
+
+            if(i === numberMods){
+                state = true
+            }
+        };
+
+        return state
+
     }
 }
 
@@ -96,19 +116,6 @@ async function downloadForge(launcherPath, event) {
     event.sender.send('message', ('Forge téléchargé avec succés'))
 }
 
-async function downloadMissedMods(difference, launcherModsPath, event) {
-    difference.forEach(async element => {
-        const downloadMissedMods = new Downloader({
-            url: "http://193.168.146.71/mods/" + element,
-            directory: launcherModsPath
-        })
-
-        await downloadMissedMods.download()
-    });
-
-    event.sender.send('message', (`${difference.length} Mods manquant téléchargés avec succés`))
-}
-
 async function downloadModsList(launcherPath) {
     const downloadModsList = new Downloader({
         url: "http://193.168.146.71/modsList.json",
@@ -117,7 +124,6 @@ async function downloadModsList(launcherPath) {
 
     await downloadModsList.download()
 
-    return "Liste des mods téléchargé avec succés"
 }
 
 function searchObj(obj, query) {
@@ -244,6 +250,17 @@ async function launchGameWithMS(result, javaExePath, RootPath, mainWindow, event
 
 }
 
+async function launchGame(MSResult, launcherPath, launcherJavaPath, launcherModsPath, mainWindow, event) {
+    await checkLauncherPaths(launcherPath, launcherJavaPath, launcherModsPath)
+    await checkForge(launcherPath, event)
+    await checkJava(launcherJavaPath, event)
+    await checkMods(launcherPath, launcherModsPath, event).then(state => {
+        if(state == true){
+            launchGameWithMS(MSResult, launcherJavaPath, launcherPath, mainWindow, event)
+        }
+    })
+}
+
 module.exports = {
     saveRam,
     checkLauncherPaths,
@@ -252,8 +269,8 @@ module.exports = {
     checkMods,
     downloadForge,
     downloadJava,
-    downloadMissedMods,
     downloadModsList,
     launchGameWithMS,
     searchObj,
+    launchGame,
 }
