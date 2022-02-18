@@ -44,16 +44,7 @@
           <a href="#" id="Accueil"><span class="fas fa-home mr-3"></span> Accueil</a>
         </li>
         <li>
-          <a href="#" id="Minecraft"><span class="fas fa-cubes mr-3"></span> Minecraft</a>
-        </li>
-        <li>
-          <a href="#" id="Satisfactory"><span class="fas fa-wrench mr-3"></span> Satisfactory</a>
-        </li>
-        <li>
-          <a href="#" id="Factorio"><span class="fas fa-lightbulb mr-3"></span> Factorio</a>
-        </li>
-        <li>
-          <a href="#" id="Settings"><span class="fas fa-cogs mr-3"></span> Settings</a>
+          <a href="#" id="ModsList"><span class="fas fa-cubes mr-3"></span> Liste des mods</a>
         </li>
         <li>
           <a href="https://discord.gg/WUzUfay"><span class="fas fa-paper-plane mr-3"></span> Contact</a>
@@ -81,7 +72,7 @@
           </div>
           <div class="col-4"></div>
           <div class="col-4">
-            <select class="form-select" aria-label="Ram a choisir" id="ramSelect">
+            <select class="form-select" aria-label="Ram a choisir" id="ramSelect" va>
               <option selected>Ram séléctionné :</option>
               <option value="4G">4G</option>
               <option value="5G">5G</option>
@@ -176,16 +167,25 @@
       //Send event for launching Minecraft
       document.getElementById('playButton').addEventListener('click', () => {
         ipc.send('Play')
+        document.getElementById('playButton').disabled = true
       })
 
       document.getElementById('Accueil').addEventListener('click', () => {
         ipc.send('GoToMain')
+      })
+      document.getElementById('ModsList').addEventListener('click', () => {
+        ipc.send('GoToModList')
       })
 
       document.getElementById('saveRam').addEventListener('click', () => {
         let e = document.getElementById('ramSelect')
         let ram = e.value
         ipc.send('SaveRam', (ram))
+      })
+
+      ipc.on('DataRam', (event, data) => {
+        let e = document.getElementById('ramSelect')
+        e.value = data
       })
 
       //Send Event for changing Pages

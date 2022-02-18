@@ -26,8 +26,16 @@ function GoToMain(mainWindow) {
     mainWindow.loadURL(`file://${__dirname}/../../views/main.html`)
 }
 
+function GoToMCModList(mainWindow, launcherModsPath){
+    mainWindow.loadURL(`file://${__dirname}/../../views/Minecraft/modList.html`)
+    mainWindow.webContents.once('dom-ready', () => {
+        mainWindow.webContents.send('ModList', launcherModsPath)
+    })
+}
+
 module.exports = {
     GoToMinecraftLogin,
+    GoToMCModList,
     GoToVpsMonitoring,
     GoToSatisfactory,
     GoToMain

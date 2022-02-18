@@ -62,6 +62,7 @@ function createWindow() {
       }
       mainWindow.webContents.send('githubReleaseData', JSON.parse(body))
     })
+
   })
 }
 
@@ -79,6 +80,19 @@ app.on('activate', () => {
   }
 });
 
+// fs.readdir(data, 'utf8', (err, files) => {
+//   var tbodyRef = document.getElementById('ModTable').getElementsByTagName('tbody')[0]
+//   files.forEach(element => {
+//       var newRow = tbodyRef.insertRow();
+
+//       // Insert a cell at the end of the row
+//       var newCell = newRow.insertCell();
+
+//       // Append a text node to the cell
+//       var newText = document.createTextNode(element);
+//       newCell.appendChild(newText);
+//   })
+// })
 
 // Updates Parts
 
@@ -136,11 +150,19 @@ ipcMain.on('loginMS', (event, data) => {
     result.profile
     MSResult = result
     mainWindow.loadURL(`file://${__dirname}/../src/views/Minecraft/main.html`)
+    let Data = fs.readFileSync(launcherPath + 'infos.json')
+    let DataJson = JSON.parse(Data)
+    let ram = DataJson.infos[0].ram
     mainWindow.webContents.once('dom-ready', () => {
       mainWindow.webContents.send('MSData', result.profile)
+      mainWindow.webContents.send('DataRam', ram)
     })
   })
   Minecraft.downloadModsList(launcherPath)
+})
+
+ipcMain.on('GoToModList', (event, data) => {
+  functionsPages.GoToMCModList(mainWindow, launcherModsPath)
 })
 
 ipcMain.on('Play', (event, data) => {

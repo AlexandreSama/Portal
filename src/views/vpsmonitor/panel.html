@@ -231,6 +231,12 @@
                     console.log('Stream :: close');
                 }).on('data', (data) => {
                     console.log('OUTPUT: ' + data);
+                    console.log('OUTPUT: ' + data);
+                    console.log($('#consoleDiv')[0].scrollHeight)
+                    console.log($('#consoleDiv').innerHeight())
+                    if ($('#consoleDiv')[0].scrollHeight >  $('#consoleDiv').innerHeight()) {
+                        consoleDiv.innerHTML = ''
+                    }
                     consoleDiv.innerHTML += data + "<br>"
                     streamingConsole = stream
                 });
@@ -321,6 +327,11 @@
                     console.log('Stream :: close');
                 }).on('data', (data) => {
                     console.log('OUTPUT: ' + data);
+                    console.log($('#consoleDiv')[0].scrollHeight)
+                    console.log($('#consoleDiv').innerHeight())
+                    if ($('#consoleDiv')[0].scrollHeight >  $('#consoleDiv').innerHeight()) {
+                        consoleDiv.innerHTML = ''
+                    }
                     consoleDiv.innerHTML += data + "<br>"
                     streamingConsole = stream
                 });
@@ -411,6 +422,12 @@
                     console.log('Stream :: close');
                 }).on('data', (data) => {
                     //console.log('OUTPUT: ' + data);
+                    console.log('OUTPUT: ' + data);
+                    console.log($('#consoleDiv')[0].scrollHeight)
+                    console.log($('#consoleDiv').innerHeight())
+                    if ($('#consoleDiv')[0].scrollHeight >  $('#consoleDiv').innerHeight()) {
+                        consoleDiv.innerHTML = ''
+                    }
                     consoleDiv.innerHTML += data + "<br>"
                     streamingConsole = stream
                 });
@@ -418,14 +435,13 @@
         })
     })
 
+
     node.addEventListener('keyup', ({
         key
     }) => {
         if (key === 'Enter') {
             streamingConsole.write(node.value + '\n')
             node.value = ""
-            console.log($('#consoleDiv')[0].scrollHeight)
-            console.log($('#consoleDiv').innerHeight())
         }
     })
 </script>
