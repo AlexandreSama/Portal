@@ -64,8 +64,9 @@
 
     <script>
         const ipc = require('electron').ipcRenderer;
-		const remote = require('electron')
 		const fs = require('fs')
+        const remote = require('@electron/remote')
+        document.title = `LoginVps | ${remote.app.getVersion()}`
 
         const notification = document.getElementById('notification')
 		const message = document.getElementById('message')

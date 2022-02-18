@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "1.0.0-r4",
+  "version": "1.0.0-r5",
   "description": "An App For Our Games !",
   "main": "src/index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/AlexandreSama/Portal#readme",
   "dependencies": {
-    "@electron/remote": "2.0.1",
+    "@electron/remote": "^2.0.1",
     "adm-zip": "^0.5.9",
     "electron-prompt": "^1.7.0",
     "electron-updater": "^4.6.1",
@@ -30,7 +30,7 @@
     "moment": "^2.29.1",
     "msmc": "^3.0.6",
     "mysql2": "^2.3.3",
-    "node-fetch": "2.6.1",
+    "node-fetch": "^2.6.7",
     "nodejs-file-downloader": "^4.9.2",
     "request": "^2.88.2",
     "ssh2": "^1.6.0",

@@ -74,6 +74,8 @@
     <script>
         const ipc = require('electron').ipcRenderer;
         const moment = require('moment')
+        const remote = require('@electron/remote')
+        document.title = `Accueil | ${remote.app.getVersion()}`
 
         const notification = document.getElementById('notification')
         const message = document.getElementById('message')

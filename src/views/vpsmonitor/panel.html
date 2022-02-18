@@ -131,6 +131,8 @@
     const ipc = require('electron').ipcRenderer;
     const fs = require('fs')
     const prompt = require('electron-prompt');
+    const remote = require('@electron/remote')
+    document.title = `Panel | ${remote.app.getVersion()}`
 
     const conn = new Client();
 

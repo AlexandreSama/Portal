@@ -90,6 +90,8 @@
             const electron = require('electron')
             const ipc = electron.ipcRenderer
             const fs = require('fs')
+            const remote = require('@electron/remote')
+            document.title = `ModsList | ${remote.app.getVersion()}`
 
             const notification = document.getElementById('notification')
             const message = document.getElementById('message')

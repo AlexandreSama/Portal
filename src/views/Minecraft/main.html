@@ -44,7 +44,7 @@
           <a href="#" id="Accueil"><span class="fas fa-home mr-3"></span> Accueil</a>
         </li>
         <li>
-          <a href="#" id="ModsList"><span class="fas fa-cubes mr-3"></span> Liste des mods</a>
+          <a href="#" id="ModsList" disabled=true><span class="fas fa-cubes mr-3"></span> Liste des mods</a>
         </li>
         <li>
           <a href="https://discord.gg/WUzUfay"><span class="fas fa-paper-plane mr-3"></span> Contact</a>
@@ -86,7 +86,7 @@
         <div class="progress-container">
           <div class="progress"></div>
         </div>
-        <p id="downloadProgress" style="bottom: 130px; right: 728px; color: white; font-size: large;">test
+        <p id="downloadProgress" style="padding-left: 500px; bottom: 130px; right: 728px; color: white; font-size: large;">
         </p>
         <button class="btn btn-outline-success" style="position: absolute; bottom: 100px; right: 200px;"
           id="playButton">Jouer !</button>
@@ -96,7 +96,7 @@
         <p id="message"></p>
         <button id="close-button" onclick="closeNotification()" class="btn btn-danger">Fermer</button>
         <button id="restart-button" onclick="restartApp()" class="hidden btn-success"> Restart</button>
-      </div> -->
+      </div>
     </div>
 
     <script>
@@ -110,12 +110,14 @@
       const electron = require('electron')
       const ipc = electron.ipcRenderer
       const pinger = require('minecraft-pinger')
+      const remote = require('@electron/remote')
 
       const notification = document.getElementById('notification')
       const message = document.getElementById('message')
       const restartButton = document.getElementById('restart-button')
       const progressbar = document.querySelector(".progress");
 
+      document.title = `Accueil MC | ${remote.app.getVersion()}`
 
       const changeProgress = (progress) => {
         progressbar.style.width = `${progress}%`;
@@ -221,6 +223,7 @@
         let percent = (i / data.numberMods) * 100
         changeProgress(percent)
       })
+      
     </script>
 </body>
 

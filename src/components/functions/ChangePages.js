@@ -6,7 +6,7 @@ let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\'
 
 function GoToMinecraftLogin(mainWindow) {
     mainWindow.loadURL(`file://${__dirname}/../../views/Minecraft/login.html`)
-
+    
     if (fs.existsSync(launcherPath)) {
         
     } else {

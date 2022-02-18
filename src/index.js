@@ -14,13 +14,15 @@ const mysql = require('mysql2')
 const { Client } = require('ssh2');
 const prompt = require('electron-prompt');
 const ConfigVps = require('./config.json')
-const remoteMain = require("@electron/remote/main");
+const remoteMain = require('@electron/remote/main')
 
+remoteMain.initialize()
 //All Called Functions
 
 const functionsPages = require('./components/functions/ChangePages')
 const Minecraft = require('./components/functions/Minecraft/Functions')
-const VpsMonitor = require('./components/functions/VpsMonitor/Functions')
+const VpsMonitor = require('./components/functions/VpsMonitor/Functions');
+const process = require('process');
 let MSResult
 
 let mainWindow
@@ -39,7 +41,6 @@ function createWindow() {
   }); // on définit une taille pour notre fenêtre
 
   mainWindow.loadURL(`file://${__dirname}/views/main.html`); // on doit charger un chemin absolu
-  remoteMain.initialize()
   remoteMain.enable(mainWindow.webContents) 
 
   mainWindow.on('closed', () => {

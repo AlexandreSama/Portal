@@ -43,6 +43,8 @@
     const ipc = require('electron').ipcRenderer;
 	const fs = require('fs')
     const prompt = require('electron-prompt');
+    const remote = require('@electron/remote')
+    document.title = `Panels | ${remote.app.getVersion()}`
 
     document.getElementById('VPSPatou').addEventListener('click', () => {
         let A2FCode;
