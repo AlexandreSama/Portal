@@ -32,19 +32,10 @@
 
   <div class="wrapper d-flex align-items-stretch">
     <nav id="sidebar">
-      <div class="custom-menu">
-        <button type="button" id="sidebarCollapse" class="btn btn-primary">
-          <i class="fa fa-bars"></i>
-          <span class="sr-only">Toggle Menu</span>
-        </button>
-      </div>
       <h1><a href="#" class="logo">Portal</a></h1>
       <ul class="list-unstyled components mb-5">
         <li class="active">
           <a href="#" id="Accueil"><span class="fas fa-home mr-3"></span> Accueil</a>
-        </li>
-        <li>
-          <a href="#" id="ModsList" disabled=true><span class="fas fa-cubes mr-3"></span> Liste des mods</a>
         </li>
         <li>
           <a href="https://discord.gg/WUzUfay"><span class="fas fa-paper-plane mr-3"></span> Contact</a>
@@ -74,11 +65,12 @@
           <div class="col-4">
             <select class="form-select" aria-label="Ram a choisir" id="ramSelect" va>
               <option selected>Ram séléctionné :</option>
-              <option value="4G">4G</option>
               <option value="5G">5G</option>
               <option value="6G">6G</option>
               <option value="7G">7G</option>
               <option value="8G">8G</option>
+              <option value="9G">9G</option>
+              <option value="10G">10G</option>
             </select>
             <button type="button" class="btn btn-success" id="saveRam">Sauvegarder</button>
           </div>
@@ -244,8 +236,17 @@
         changeProgress(percent)
       })
 
+      ipc.on('dataMcd', (event, data) => {
+        document.getElementById('downloadProgress').innerHTML = 'Lancement du jeu !'
+      })
+
       ipc.on('errorlaunch', (event, data) => {
         remote.dialog.showErrorBox('Erreur lors du lancement du jeu !', `Voici le code d\'erreur : ${data} ! Veuillez le transmettre a mes créateurs !`)
+        document.getElementById('playButton').disabled = false
+      })
+
+      ipc.on('MinecraftOver', (event, data) => {
+        document.getElementById('playButton').disabled = false
       })
       
     </script>

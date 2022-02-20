@@ -66,7 +66,6 @@ function createWindow() {
       mainWindow.webContents.send('githubReleaseData', JSON.parse(body))
     })
     let appIcon = __dirname + '/logo.ico'
-    console.log(appIcon)
     let tray = new Tray(appIcon)
   })
 }

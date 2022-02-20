@@ -252,6 +252,7 @@ async function launchGameWithMS(result, javaExePath, RootPath, mainWindow, event
             event.sender.send('errorlaunch', (e))
         }else{
             mainWindow.show()
+            event.sender.send('MinecraftOver')
         }
     })
 
