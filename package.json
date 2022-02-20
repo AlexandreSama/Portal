@@ -1,8 +1,9 @@
 {
   "name": "portal",
-  "version": "1.0.0-r5",
+  "version": "1.0.0-r6",
   "description": "An App For Our Games !",
   "main": "src/index.js",
+  "icon": "src/logo.ico",
   "scripts": {
     "debug": "electron .",
     "build": "electron-builder build --win --publish never",
@@ -37,7 +38,7 @@
     "utf8": "^3.0.0"
   },
   "devDependencies": {
-    "electron": "^16.0.8",
+    "electron": "^17.0.1",
     "electron-builder": "^22.14.13"
   }
 }

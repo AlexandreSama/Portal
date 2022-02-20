@@ -1,4 +1,5 @@
 const electron = require('electron');
+const Tray = electron.Tray
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
@@ -15,6 +16,7 @@ const { Client } = require('ssh2');
 const prompt = require('electron-prompt');
 const ConfigVps = require('./config.json')
 const remoteMain = require('@electron/remote/main')
+const nativeImage = require('electron')
 
 remoteMain.initialize()
 //All Called Functions
@@ -37,7 +39,7 @@ function createWindow() {
       contextIsolation: false,
       enableRemoteModule: true,
     },
-    //icon: `file://${__dirname}/icon.ico`
+    icon: __dirname + '/logo.ico'
   }); // on définit une taille pour notre fenêtre
 
   mainWindow.loadURL(`file://${__dirname}/views/main.html`); // on doit charger un chemin absolu
@@ -63,7 +65,9 @@ function createWindow() {
       }
       mainWindow.webContents.send('githubReleaseData', JSON.parse(body))
     })
-
+    let appIcon = __dirname + '/logo.ico'
+    console.log(appIcon)
+    let tray = new Tray(appIcon)
   })
 }
 

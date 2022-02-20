@@ -190,6 +190,26 @@
         e.value = data
       })
 
+      ipc.on('finishFile', (event, data) => {
+        document.getElementById('downloadProgress').innerHTML = "Dossiers crée avec succés"
+      })
+
+      ipc.on('forgeAlreadyDownload', (event, data) => {
+        document.getElementById('downloadProgress').innerHTML = "Forge déjà téléchargé"
+      })
+
+      ipc.on('forgeDownloaded', (event, data) => {
+        document.getElementById('downloadProgress').innerHTML = data
+      })
+
+      ipc.on('javaAlreadyDownloaded', (event, data) => {
+        document.getElementById('downloadProgress').innerHTML = "Java déjà téléchargé"
+      })
+
+      ipc.on('javaDownloaded', (event, data) => {
+        document.getElementById('downloadProgress').innerHTML = data
+      })
+
       //Send Event for changing Pages
 
       // Get Launch Event
@@ -222,6 +242,10 @@
         document.getElementById('downloadProgress').innerHTML = `Téléchargement de ${i} mods sur ${data.numberMods}`
         let percent = (i / data.numberMods) * 100
         changeProgress(percent)
+      })
+
+      ipc.on('errorlaunch', (event, data) => {
+        remote.dialog.showErrorBox('Erreur lors du lancement du jeu !', `Voici le code d\'erreur : ${data} ! Veuillez le transmettre a mes créateurs !`)
       })
       
     </script>

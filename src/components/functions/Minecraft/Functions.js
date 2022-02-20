@@ -11,16 +11,21 @@ const msmc = require("msmc");
 const fetch = require('node-fetch');
 
 
-async function checkLauncherPaths(launcherPath, launcherJavaPath, launcherModsPath) {
+async function checkLauncherPaths(launcherPath, launcherJavaPath, launcherModsPath, event) {
     const arrayPath = [launcherPath, launcherModsPath, launcherJavaPath]
 
     arrayPath.forEach(element => {
         if (!fs.existsSync(element)) {
-            fs.mkdirSync(element)
+            fs.mkdir(element, (err) => {
+                if(err){
+                    event.sender.send('error', err)
+                }
+
+            })
         } else {
-            console.log('Dossier déjà existant')
         }
     })
+    event.sender.send('finishFile')
 }
 
 async function checkForge(launcherPath, event) {
@@ -28,9 +33,8 @@ async function checkForge(launcherPath, event) {
     fs.readFile(launcherPath + 'forge.jar', async (err, file) => {
         if (err) {
             const result = await downloadForge(launcherPath, event)
-            if (result) {
-                return true
-            }
+        }else{
+            event.sender.send('forgeAlreadyDownload')
         }
     })
 }
@@ -39,6 +43,8 @@ async function checkJava(launcherJavaPath, event) {
     const files = fs.readdirSync(launcherJavaPath)
     if (files.length == 0) {
         await downloadJava(launcherJavaPath, event)
+    }else{
+        event.sender.send('javaAlreadyDownloaded')
     }
 }
 
@@ -47,7 +53,6 @@ async function checkMods(launcherPath, launcherModsPath, event) {
     let jsonMods = []
     let folderMods = []
     let i = 0
-    let state = false
 
     fs.readdirSync(launcherModsPath).forEach(file => {
         folderMods.push(file)
@@ -77,13 +82,7 @@ async function checkMods(launcherPath, launcherModsPath, event) {
             event.sender.send('MissedModsDownload', {
                 numberMods
             })
-
-            if(i === numberMods){
-                state = true
-            }
         };
-
-        return state
 
     }
 }
@@ -102,7 +101,7 @@ async function downloadJava(launcherJavaPath, event) {
 
     fs.unlinkSync(launcherJavaPath + 'java.zip')
 
-    event.sender.send('message', ('Java téléchargé avec succés'))
+    event.sender.send('javaDownloaded', ('Java téléchargé avec succés'))
 }
 
 async function downloadForge(launcherPath, event) {
@@ -113,7 +112,7 @@ async function downloadForge(launcherPath, event) {
 
     await downloadForge.download()
 
-    event.sender.send('message', ('Forge téléchargé avec succés'))
+    event.sender.send('forgeDownloaded', ('Forge téléchargé avec succés'))
 }
 
 async function downloadModsList(launcherPath) {
@@ -235,29 +234,42 @@ async function launchGameWithMS(result, javaExePath, RootPath, mainWindow, event
         }))
         console.log(e)
     })
-    launcher.on('debug', (e) => {
-        console.log(e)
-        mainWindow.webContents.send('dataMc', {
-            e
-        })
-    })
+    // launcher.on('debug', (e) => {
+    //     console.log(e)
+    //     mainWindow.webContents.send('dataMc', {
+    //         e
+    //     })
+    // })
     launcher.on('data', (e) => {
         mainWindow.webContents.send('dataMcd', {
             e
         })
-        console.log(e)
+        mainWindow.hide()
+    })
+    launcher.on('close', (e) => {
+        if(e !== 0){
+            mainWindow.show()
+            event.sender.send('errorlaunch', (e))
+        }else{
+            mainWindow.show()
+        }
     })
 
 }
 
 async function launchGame(MSResult, launcherPath, launcherJavaPath, launcherModsPath, mainWindow, event) {
-    await checkLauncherPaths(launcherPath, launcherJavaPath, launcherModsPath)
-    await checkForge(launcherPath, event)
-    await checkJava(launcherJavaPath, event)
-    await checkMods(launcherPath, launcherModsPath, event).then(state => {
-        if(state == true){
-            launchGameWithMS(MSResult, launcherJavaPath, launcherPath, mainWindow, event)
-        }
+    await checkLauncherPaths(launcherPath, launcherJavaPath, launcherModsPath, event).then(async () => {
+        console.log("Files Checked !")
+        await checkForge(launcherPath, event).then(async () => {
+            console.log('Forge Checked !')
+            await checkJava(launcherJavaPath, event).then(async () => {
+                console.log('Java Checked !')
+                await checkMods(launcherPath, launcherModsPath, event).then(() => {
+                    console.log('Mods Checked !')
+                    launchGameWithMS(MSResult, launcherJavaPath, launcherPath, mainWindow, event)
+                })
+            })
+        })
     })
 }
 
