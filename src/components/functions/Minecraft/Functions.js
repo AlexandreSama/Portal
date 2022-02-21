@@ -149,8 +149,10 @@ function searchObj(obj, query) {
 }
 
 async function saveRam(ram, launcherPath) {
+    console.log("Fonction appellé")
 
     if (fs.existsSync(launcherPath + 'infos.json')) {
+        console.log("Il existe")
         let rawdata = fs.readFileSync(launcherPath + 'infos.json')
 
         let student = JSON.parse(rawdata);
@@ -170,6 +172,7 @@ async function saveRam(ram, launcherPath) {
         }
         let datsa = JSON.stringify(ID)
         fs.writeFileSync(launcherPath + 'infos.json', datsa)
+        console.log("Fichier Crée")
     }
 }
 

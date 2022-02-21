@@ -63,7 +63,7 @@
           </div>
           <div class="col-4"></div>
           <div class="col-4">
-            <select class="form-select" aria-label="Ram a choisir" id="ramSelect" va>
+            <select class="form-select" aria-label="Ram a choisir" id="ramSelect">
               <option selected>Ram séléctionné :</option>
               <option value="5G">5G</option>
               <option value="6G">6G</option>
@@ -72,7 +72,7 @@
               <option value="9G">9G</option>
               <option value="10G">10G</option>
             </select>
-            <button type="button" class="btn btn-success" id="saveRam">Sauvegarder</button>
+            <button class="btn btn-success" id="ramSave">Sauvegarder</button>
           </div>
         </div>
         <div class="progress-container">
@@ -167,11 +167,9 @@
       document.getElementById('Accueil').addEventListener('click', () => {
         ipc.send('GoToMain')
       })
-      document.getElementById('ModsList').addEventListener('click', () => {
-        ipc.send('GoToModList')
-      })
 
-      document.getElementById('saveRam').addEventListener('click', () => {
+      document.getElementById('ramSave').addEventListener('click', () => {
+        console.log('Event send')
         let e = document.getElementById('ramSelect')
         let ram = e.value
         ipc.send('SaveRam', (ram))
