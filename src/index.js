@@ -26,11 +26,6 @@ let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\'
 let launcherModsPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\mods\\'
 let launcherJavaPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\Java\\'
 
-let rawdata = fs.readFileSync(launcherPath + 'infos.json')
-
-let student = JSON.parse(rawdata);
-
-if(student.infos[0].appid){
   client.login({
     clientId: '653960332489785384'
   }).catch(console.error);
@@ -42,9 +37,9 @@ if(student.infos[0].appid){
         details: "Voyage a travers les portails",
         state: "Made with Discord-RPC",
         assets: {
-          large_image: ConfigVps['discord.largeimage'],
+          large_image: "portal",
           large_text: "Voyage a travers les portails",
-          small_image: ConfigVps['discord.smallimage'],
+          small_image: "fusee",
           small_text: "Enfile sa tenue de cosmonaute",
         },
         buttons: [{
@@ -55,13 +50,10 @@ if(student.infos[0].appid){
             label: "Télécharge moi",
             url: "https://github.com/AlexandreSama/Portal/releases/download/v1.0.0-r7/portal-Setup-1.0.0-r7.exe"
           },
-          //labels are the buttons that you wanna provide to your rich presence and urls are the links that leads you when someone press that button
-          //Note the button won't work for you but don't worry it work for others
         ]
       }
     })
   })
-}
 
 remoteMain.initialize()
 //All Called Functions

@@ -1,6 +1,6 @@
 {
   "name": "portal",
-  "version": "1.0.0-r8",
+  "version": "1.0.0-r9",
   "description": "An App For Our Games !",
   "main": "src/index.js",
   "icon": "src/logo.ico",
