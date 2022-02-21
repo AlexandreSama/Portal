@@ -50,11 +50,8 @@
         <div id="content" class="p-4 p-md-5 pt-5">
             <h2 class="mb-4">Portal</h2>
             <div class="row">
-                <div class="col-lg-5 col-md-5 col-5 pl-5" style="border: 2px solid black;" id="changelog">
-
-
-                </div>
-                <!--end col-->
+                <input type="text" placeholder="Insérer votre AppID" id="AppID">
+                <button type="button" class="btn btn-success" id="saveAppID">Sauvegarder</button>
             </div>
             <!--end row-->
         </div>
@@ -75,7 +72,7 @@
         const ipc = require('electron').ipcRenderer;
         const moment = require('moment')
         const remote = require('@electron/remote')
-        document.title = `Accueil | ${remote.app.getVersion()}`
+        document.title = `Settings | ${remote.app.getVersion()}`
 
         const notification = document.getElementById('notification')
         const message = document.getElementById('message')
@@ -103,24 +100,6 @@
             notification.classList.remove('hidden')
         })
 
-        ipc.on('githubReleaseData', (event, data) => {
-            // let datas = JSON.stringify(data.body)
-            // let formatedBody = JSON.parse(datas)
-            console.log(data)
-            data.forEach(async element => {
-                document.getElementById('changelog').innerHTML += `
-                <h5 class="mt-4"> 
-                <span class="p-2 bg-light shadow rounded text-success"> ${element.tag_name}</span> - ${moment(element.published_at).format("Do-MMM-YYYY")}
-                </h5>
-
-                <ul class="list-unstyled mt-3">
-                    <li class="text-muted ml-3">
-                        ${element.body.replaceAll('-', '<br> -')}
-                    </li>
-                `
-            });
-        })
-
         document.getElementById('Minecraft').addEventListener('click',() => {
             ipc.send('GoToMinecraft')
         })
@@ -130,8 +109,14 @@
         document.getElementById('Factorio').addEventListener('click',() => {
             ipc.send('GoToFactorio')
         })
-        document.getElementById('Settings').addEventListener('click', () => {
-            ipc.send('GoToSettings')
+        document.getElementById('Accueil').addEventListener('click', () => {
+            ipc.send('GoToMain')
+        })
+
+        document.getElementById('saveAppID').addEventListener('click', () => {
+            let AppID = document.getElementById('AppID').value
+
+            ipc.send('SaveAppID', AppID)
         })
     </script>
 </body>

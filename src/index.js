@@ -15,46 +15,53 @@ const mysql = require('mysql2')
 const {
   Client
 } = require('ssh2');
-const prompt = require('electron-prompt');
 const ConfigVps = require('./config.json')
 const remoteMain = require('@electron/remote/main')
-const nativeImage = require('electron')
-// const rpc = require("discord-rpc");
-// const client = new rpc.Client({
-//   transport: 'ipc'
-// });
+const rpc = require("discord-rpc");
+const client = new rpc.Client({
+  transport: 'ipc'
+});
 
-// client.login({
-//   clientId: '256892994504884224'
-// }).catch(console.error);
+let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\'
+let launcherModsPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\mods\\'
+let launcherJavaPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\Java\\'
 
-// client.on('ready', () => {
-//   console.log('Your presence works now check your discord profile :D')
-//   client.request('SET_ACTIVITY', {
-//     pid: process.pid,
-//     activity: {
-//       details: "",
-//       state: "",
-//       assets: {
-//         large_image: config.LargeImage,
-//         large_text: config.LargeImageText,
-//         small_image: config.SmallImage,
-//         small_text: config.SmallImageText,
-//       },
-//       buttons: [{
-//           label: config.Button1,
-//           url: config.Url1
-//         },
-//         {
-//           label: config.Button2,
-//           url: config.Url2
-//         },
-//         //labels are the buttons that you wanna provide to your rich presence and urls are the links that leads you when someone press that button
-//         //Note the button won't work for you but don't worry it work for others
-//       ]
-//     }
-//   })
-// })
+let rawdata = fs.readFileSync(launcherPath + 'infos.json')
+
+let student = JSON.parse(rawdata);
+
+if(student.infos[0].appid){
+  client.login({
+    clientId: '653960332489785384'
+  }).catch(console.error);
+  client.on('ready', () => {
+    console.log('Your presence works now check your discord profile :D')
+    client.request('SET_ACTIVITY', {
+      pid: process.pid,
+      activity: {
+        details: "Voyage a travers les portails",
+        state: "Made with Discord-RPC",
+        assets: {
+          large_image: ConfigVps['discord.largeimage'],
+          large_text: "Voyage a travers les portails",
+          small_image: ConfigVps['discord.smallimage'],
+          small_text: "Enfile sa tenue de cosmonaute",
+        },
+        buttons: [{
+            label: "Notre Discord",
+            url: "https://discord.gg/8mH6nw7H"
+          },
+          {
+            label: "Télécharge moi",
+            url: "https://github.com/AlexandreSama/Portal/releases/download/v1.0.0-r7/portal-Setup-1.0.0-r7.exe"
+          },
+          //labels are the buttons that you wanna provide to your rich presence and urls are the links that leads you when someone press that button
+          //Note the button won't work for you but don't worry it work for others
+        ]
+      }
+    })
+  })
+}
 
 remoteMain.initialize()
 //All Called Functions
@@ -174,11 +181,15 @@ ipcMain.on('GoToMain', (event, data) => {
   functionsPages.GoToMain(mainWindow)
 })
 
-// Minecraft Parts
+ipcMain.on('GoToSettings', (event, data) => {
+  functionsPages.GoToSettings(mainWindow)
+})
 
-let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\'
-let launcherModsPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\mods\\'
-let launcherJavaPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\Java\\'
+ipcMain.on('SaveAppID', (event, data) => {
+  functionsPages.saveAppID(data, launcherPath)
+})
+
+// Minecraft Parts
 
 ipcMain.on('loginMS', (event, data) => {
   msmc.setFetch(fetch)
