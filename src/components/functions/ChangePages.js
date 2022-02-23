@@ -15,7 +15,7 @@ function GoToMinecraftLogin(mainWindow) {
 }
 
 function GoToAccueilMC(mainWindow){
-    mainWindow.loadURL(`file://${__dirname}/../../views/accueil.html`)
+    mainWindow.loadURL(`file://${__dirname}/../../views/Minecraft/accueil.html`)
 }
 
 function GoToSatisfactory(mainWindow) {

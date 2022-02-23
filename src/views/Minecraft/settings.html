@@ -84,6 +84,7 @@
     const message = document.getElementById('message')
     const restartButton = document.getElementById('restart-button')
     document.title = `Accueil MC | ${remote.app.getVersion()}`
+    document.getElementById('videoBG').volume = 0.2
 
     document.getElementById('AccueilPortal').addEventListener('click', () => {
         ipc.send('GoToMain')
