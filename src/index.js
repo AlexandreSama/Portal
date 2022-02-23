@@ -76,6 +76,7 @@ function createWindow() {
       contextIsolation: false,
       enableRemoteModule: true,
     },
+    frame: true,
     icon: __dirname + '/logo.ico'
   }); // on définit une taille pour notre fenêtre
 
@@ -173,8 +174,16 @@ ipcMain.on('GoToMain', (event, data) => {
   functionsPages.GoToMain(mainWindow)
 })
 
+ipcMain.on('GoToAccueilMC', (event, data) => {
+  functionsPages.GoToAccueilMC(mainWindow)
+})
+
 ipcMain.on('GoToSettings', (event, data) => {
   functionsPages.GoToSettings(mainWindow)
+})
+
+ipcMain.on('GoToSettingsMC', (event, data) => {
+  functionsPages.GoToSettingsMC(mainWindow)
 })
 
 ipcMain.on('SaveAppID', (event, data) => {
@@ -194,7 +203,7 @@ ipcMain.on('loginMS', (event, data) => {
     }
     result.profile
     MSResult = result
-    mainWindow.loadURL(`file://${__dirname}/../src/views/Minecraft/main.html`)
+    mainWindow.loadURL(`file://${__dirname}/../src/views/Minecraft/accueil.html`)
     let Data = fs.readFileSync(launcherPath + 'infos.json')
     let DataJson = JSON.parse(Data)
     let ram = DataJson.infos[0].ram

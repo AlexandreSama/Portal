@@ -14,6 +14,10 @@ function GoToMinecraftLogin(mainWindow) {
     }
 }
 
+function GoToAccueilMC(mainWindow){
+    mainWindow.loadURL(`file://${__dirname}/../../views/accueil.html`)
+}
+
 function GoToSatisfactory(mainWindow) {
     mainWindow.loadURL(`file://${__dirname}/../../views/Satisfactory/main.html`)
 }
@@ -35,6 +39,10 @@ function GoToMCModList(mainWindow, launcherModsPath){
 
 function GoToSettings(mainWindow){
     mainWindow.loadURL(`file://${__dirname}/../../views/settings.html`)
+}
+
+function GoToSettingsMC(mainWindow){
+    mainWindow.loadURL(`file://${__dirname}/../../views/Minecraft/settings.html`)
 }
 
 async function saveAppID(AppID, launcherPath) {
@@ -67,5 +75,7 @@ module.exports = {
     GoToSatisfactory,
     GoToMain,
     GoToSettings,
-    saveAppID
+    saveAppID,
+    GoToSettingsMC,
+    GoToAccueilMC
 }
