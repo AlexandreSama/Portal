@@ -6,15 +6,15 @@ let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\'
 
 function GoToMinecraftLogin(mainWindow) {
     mainWindow.loadURL(`file://${__dirname}/../../views/Minecraft/login.html`)
-    
+
     if (fs.existsSync(launcherPath)) {
-        
+
     } else {
         fs.mkdirSync(launcherPath)
     }
 }
 
-function GoToAccueilMC(mainWindow){
+function GoToAccueilMC(mainWindow) {
     mainWindow.loadURL(`file://${__dirname}/../../views/Minecraft/accueil.html`)
 }
 
@@ -30,18 +30,18 @@ function GoToMain(mainWindow) {
     mainWindow.loadURL(`file://${__dirname}/../../views/main.html`)
 }
 
-function GoToMCModList(mainWindow, launcherModsPath){
+function GoToMCModList(mainWindow, launcherModsPath) {
     mainWindow.loadURL(`file://${__dirname}/../../views/Minecraft/modList.html`)
     mainWindow.webContents.once('dom-ready', () => {
         mainWindow.webContents.send('ModList', launcherModsPath)
     })
 }
 
-function GoToSettings(mainWindow){
+function GoToSettings(mainWindow) {
     mainWindow.loadURL(`file://${__dirname}/../../views/settings.html`)
 }
 
-function GoToSettingsMC(mainWindow){
+function GoToSettingsMC(mainWindow) {
     mainWindow.loadURL(`file://${__dirname}/../../views/Minecraft/settings.html`)
 }
 

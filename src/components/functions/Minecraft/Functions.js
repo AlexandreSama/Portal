@@ -17,13 +17,12 @@ async function checkLauncherPaths(launcherPath, launcherJavaPath, launcherModsPa
     arrayPath.forEach(element => {
         if (!fs.existsSync(element)) {
             fs.mkdir(element, (err) => {
-                if(err){
+                if (err) {
                     event.sender.send('error', err)
                 }
 
             })
-        } else {
-        }
+        } else {}
     })
     event.sender.send('finishFile')
 }
@@ -33,7 +32,7 @@ async function checkForge(launcherPath, event) {
     fs.readFile(launcherPath + 'forge.jar', async (err, file) => {
         if (err) {
             const result = await downloadForge(launcherPath, event)
-        }else{
+        } else {
             event.sender.send('forgeAlreadyDownload')
         }
     })
@@ -43,7 +42,7 @@ async function checkJava(launcherJavaPath, event) {
     const files = fs.readdirSync(launcherJavaPath)
     if (files.length == 0) {
         await downloadJava(launcherJavaPath, event)
-    }else{
+    } else {
         event.sender.send('javaAlreadyDownloaded')
     }
 }
@@ -70,7 +69,7 @@ async function checkMods(launcherPath, launcherModsPath, event) {
     if (difference.length >= 1) {
 
         let numberMods = difference.length
-        for await(const element of difference) {
+        for await (const element of difference) {
             const downloadMissedMods = new Downloader({
                 url: "http://193.168.146.71/mods/" + element,
                 directory: launcherModsPath,
@@ -250,10 +249,10 @@ async function launchGameWithMS(result, javaExePath, RootPath, mainWindow, event
         mainWindow.hide()
     })
     launcher.on('close', (e) => {
-        if(e !== 0){
+        if (e !== 0) {
             mainWindow.show()
             event.sender.send('errorlaunch', (e))
-        }else{
+        } else {
             mainWindow.show()
             event.sender.send('MinecraftOver')
         }

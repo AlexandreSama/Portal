@@ -100,13 +100,13 @@
             notification.classList.remove('hidden')
         })
 
-        document.getElementById('Minecraft').addEventListener('click',() => {
+        document.getElementById('Minecraft').addEventListener('click', () => {
             ipc.send('GoToMinecraft')
         })
-        document.getElementById('VpsMonitor').addEventListener('click',() => {
+        document.getElementById('VpsMonitor').addEventListener('click', () => {
             ipc.send('GoToVpsMonitor')
         })
-        document.getElementById('Factorio').addEventListener('click',() => {
+        document.getElementById('Factorio').addEventListener('click', () => {
             ipc.send('GoToFactorio')
         })
         document.getElementById('Accueil').addEventListener('click', () => {

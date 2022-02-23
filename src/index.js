@@ -26,34 +26,34 @@ let launcherPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\'
 let launcherModsPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\mods\\'
 let launcherJavaPath = app.getPath('appData') + '\\KarasiaLauncher\\Minecraft\\Java\\'
 
-  client.login({
-    clientId: '653960332489785384'
-  }).catch(console.error);
-  client.on('ready', () => {
-    console.log('Your presence works now check your discord profile :D')
-    client.request('SET_ACTIVITY', {
-      pid: process.pid,
-      activity: {
-        details: "Voyage a travers les portails",
-        state: "Made with Discord-RPC",
-        assets: {
-          large_image: "portal",
-          large_text: "Voyage a travers les portails",
-          small_image: "fusee",
-          small_text: "Enfile sa tenue de cosmonaute",
+client.login({
+  clientId: '653960332489785384'
+}).catch(console.error);
+client.on('ready', () => {
+  console.log('Your presence works now check your discord profile :D')
+  client.request('SET_ACTIVITY', {
+    pid: process.pid,
+    activity: {
+      details: "Voyage a travers les portails",
+      state: "Made with Discord-RPC",
+      assets: {
+        large_image: "portal",
+        large_text: "Voyage a travers les portails",
+        small_image: "fusee",
+        small_text: "Enfile sa tenue de cosmonaute",
+      },
+      buttons: [{
+          label: "Notre Discord",
+          url: "https://discord.gg/8mH6nw7H"
         },
-        buttons: [{
-            label: "Notre Discord",
-            url: "https://discord.gg/8mH6nw7H"
-          },
-          {
-            label: "Télécharge moi",
-            url: "https://github.com/AlexandreSama/Portal/releases/download/v1.0.0-r7/portal-Setup-1.0.0-r7.exe"
-          },
-        ]
-      }
-    })
+        {
+          label: "Télécharge moi",
+          url: "https://github.com/AlexandreSama/Portal/releases/download/v1.0.0-r7/portal-Setup-1.0.0-r7.exe"
+        },
+      ]
+    }
   })
+})
 
 remoteMain.initialize()
 //All Called Functions
