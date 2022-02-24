@@ -15,7 +15,7 @@
 
 <body>
     <video autoplay loop id="videoBG">
-        <source src="../../components/assets/videos/Background.mp4" type="video/mp4">
+        <source src="http://193.168.146.71/Background.mp4" type="video/mp4">
     </video>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
@@ -43,28 +43,16 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 justify-content-center">
-                <div class="selected-item">
-                    <p>Ram sélectionné : <span>6G</span></p>
-                </div>
-
-                <div class="dropdown" id="ramSelect">
-                    <span class="selLabel">Selectionne la ram</span>
-                    <input type="hidden" name="cd-dropdown">
-                    <ul class="dropdown-list">
-                        <li data-value="6G">
-                            <span>6G</span>
-                        </li>
-                        <li data-value="7G">
-                            <span>7G</span>
-                        </li>
-                        <li data-value="8G">
-                            <span>8G</span>
-                        </li>
-                        <li data-value="9G">
-                            <span>9G</span>
-                        </li>
-                    </ul>
-                </div>
+                <select class="form-select" aria-label="Default select example" style="position: relative;" id="ramSelect">
+                    <option selected>Sélectionne la ram</option>
+                    <option value="6G">6G</option>
+                    <option value="7G">7G</option>
+                    <option value="8G">8G</option>
+                    <option value="9G">9G</option>
+                    <option value="10G">10G</option>
+                    <option value="11G">11G</option>
+                </select>
+                <button type="button" class="btn btn-success" style="position: relative;" id="ramSave">Sauvegarder</button>
             </div>
         </div>
     </div>
