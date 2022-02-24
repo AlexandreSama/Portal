@@ -202,26 +202,27 @@ async function launchGameWithMS(result, javaExePath, RootPath, mainWindow, event
             }
             launcher.launch(opts);
         }
+        if(data){
+            let student = JSON.parse(data);
+            console.log(student.infos[0].ram)
 
-        let student = JSON.parse(data);
-        console.log(student.infos[0].ram)
-
-        opts = {
-            clientPackage: null,
-            authorization: msmc.getMCLC().getAuth(result),
-            root: RootPath,
-            forge: RootPath + "forge.jar",
-            javaPath: path.join(javaExePath + 'bin\\java.exe'),
-            version: {
-                number: "1.12.2",
-                type: "release"
-            },
-            memory: {
-                max: student.infos[0].ram,
-                min: "4G"
+            opts = {
+                clientPackage: null,
+                authorization: msmc.getMCLC().getAuth(result),
+                root: RootPath,
+                forge: RootPath + "forge.jar",
+                javaPath: path.join(javaExePath + 'bin\\java.exe'),
+                version: {
+                    number: "1.12.2",
+                    type: "release"
+                },
+                memory: {
+                    max: student.infos[0].ram,
+                    min: "4G"
+                }
             }
+            launcher.launch(opts);
         }
-        launcher.launch(opts);
     })
 
     launcher.on('progress', (e) => {
